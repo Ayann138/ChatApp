@@ -1,7 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import img1 from '../../public/1.jpeg'
 import Input from '../../components/Input'
+import Cookies from 'js-cookie';
+
 function ChatPage() {
+    const FullName =  Cookies.get('FullName');
+    const ProfilePic =  Cookies.get('ProfilePic');
+    console.log(ProfilePic)
+
+    useEffect(() =>{
+     //console.log("User in chat: " , FullName)
+
+    },[])
     const contacts = [
         {
             name: 'Maaz',
@@ -39,11 +49,11 @@ function ChatPage() {
             <div className='w-[25%] bg-secondary ' >
                 <div className='flex items-center my-8 mx-14'>
                     <div className='border border-primary p-[2px] rounded-full'>
-                        <img src='1.jpeg' width={40} height={40} className="rounded-full" />
+                        <img src={`http://localhost:8000/uploads/${ProfilePic}`} width={40} height={40} className="rounded-full" />
 
                     </div>
                     <div className='ml-4'>
-                        <h3 className='text-xl font-semibold'>Ayan Shahid </h3>
+                        <h3 className='text-xl font-semibold'>{FullName} </h3>
                         <p className='text-md font-light'>My Account</p>
                     </div>
                 </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import Cookies from 'js-cookie';
 function LoginForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -24,7 +25,10 @@ function LoginForm() {
         body: JSON.stringify({ email, password }),
       });
       const res = await response.json()
+      console.log(res)
       if(response.status == 200){
+          Cookies.set('FullName', res.user.fullname);
+          Cookies.set('ProfilePic', res.user.profilepic);
           router.push('/ChatPage')
       }else if(response.status == 400 || response.status == 404){
         alert(res.Status)
