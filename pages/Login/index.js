@@ -1,18 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 function LoginForm() {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
   const router = useRouter()
-  const handleLogin = () =>{
-    router.push('/ChatPage')
+  const handleLogin = async () => {
+    if (!email) {
+      alert("Please Enter Email")
+      return;
     }
+    if (!password) {
+      alert("Please Enter Password")
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:8000/Login' ,{
+        method: 'POST', 
+        headers:{
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      const res = await response.json()
+      if(response.status == 200){
+          router.push('/ChatPage')
+      }else if(response.status == 400 || response.status == 404){
+        alert(res.Status)
+      }
+    } catch (error) {
+      console.error('Error submitting form data:', error);
+    }
+  };
   return (
     <div className="bg-gray-600 flex items-center justify-center h-screen">
 
       <div>
         {/* Left Side card */}
         <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 h-[400px]">
-        <div className="mb-4">
+          <div className="mb-4">
             <h1 className="block text-black text-lg font-bold mb-2" htmlFor="username">
               Login To Your Account
             </h1>
@@ -27,6 +54,8 @@ function LoginForm() {
               id="Email"
               type="text"
               placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="mb-6">
@@ -38,6 +67,8 @@ function LoginForm() {
               id="password"
               type="password"
               placeholder="******************"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <div className="flex items-center justify-between">
@@ -50,8 +81,8 @@ function LoginForm() {
             </button>
           </div>
           <div className='mt-4'>
-          <a className='text-sm'>New User? </a>
-          <a className='text-sm' href='/Register'> Sign Up</a>
+            <a className='text-sm'>New User? </a>
+            <a className='text-sm' href='/Register'> Sign Up</a>
           </div>
 
 
