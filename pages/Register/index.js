@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import { useRouter } from 'next/router';
 function SignupForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [phoneNo, setPhone] = useState('');
   const [profilePic, setProfilePic] = useState(null);
-
-  const handleSignUp = () => {
+  const router = useRouter()
+  const handleSignUp = async () => {
     const uid = uuidv4();
     const formData = new FormData();
     formData.append('uid' , uid)
@@ -17,15 +18,27 @@ function SignupForm() {
     formData.append('fullName', fullName);
     formData.append('phoneNo', phoneNo);
     formData.append('profilePic', profilePic);
-
-    axios.post('http://localhost:8000/RegisterUser', formData)
-      .then(response => {
-
-        console.log('Signup successful:', response.data);
-      })
-      .catch(error => {
-        console.error('Error signing up:', error);
+    try {
+      const response = await axios.post('http://localhost:8000/RegisterUser', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+         // 'Authorization': token,
+        },
       });
+      console.log(response)
+      if (response.status == 401) {
+        alert("Unauthorized Access");
+
+      } else if (response.status != 200 && response.status != 201) {
+        alert("Data Not Submitted");
+        throw new Error(`Server error!`);
+      }
+
+      alert("User Added");
+      router.push(`/Login`);
+    } catch (error) {
+      console.error('Error submitting form data:', error);
+    }
   };
 
   const handleProfilePicChange = (e) => {
