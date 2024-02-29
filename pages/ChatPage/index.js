@@ -4,15 +4,14 @@ import Input from '../../components/Input'
 import Cookies from 'js-cookie';
 
 function ChatPage() {
-  //  const [user,setUser] = useState(JSON.parse(Cookies.get('user')))
-    const FullName =  Cookies.get('FullName');
-    const ProfilePic =  Cookies.get('ProfilePic');
-    console.log(ProfilePic)
+    const [user, setUser] = useState(JSON.parse(Cookies.get('User')))
 
-    useEffect(() =>{
-     //console.log("User in chat: " , FullName)
+    console.log("USer: ", user)
 
-    },[])
+    useEffect(() => {
+        //console.log("User in chat: " , FullName)
+
+    }, [])
     const contacts = [
         {
             name: 'Maaz',
@@ -45,16 +44,45 @@ function ChatPage() {
             img: '3.jpeg'
         },
     ]
+
+    const [userChats , setUserChats] = useState([])
+    useEffect(() => {
+        const fetchUserChats = async () => {
+            try {
+                const response = await fetch(`http://localhost:8000/GetAllUserChats/${user.uid}`, {
+                    method: "GET",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    const userChats = await response.json();
+                    console.log("UserChats:", userChats);
+                    setUserChats(userChats)
+                } else {
+                    console.error('Error fetching user chats:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching user chats:', error);
+            }
+        };
+    
+        if (user && user.uid) {
+            fetchUserChats();
+            console.log("userChats Outside: " , userChats)
+        }
+    }, [user]);
+    
     return (
         <div className="w-screen flex">
-            <div className='w-[25%] h-screen overflow-scroll scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-[#2c9496] bg-secondary ' >
+            <div className='w-[25%] h-screen overflow-scroll overflow-y-auto bg-secondary ' >
                 <div className='flex items-center my-8 mx-14'>
                     <div className='border border-primary p-[2px] rounded-full'>
-                        <img src={`http://localhost:8000/uploads/${ProfilePic}`} width={40} height={40} className="rounded-full" />
+                        <img src={`http://localhost:8000/uploads/${user.profilepic}`} width={40} height={40} className="rounded-full" />
 
                     </div>
                     <div className='ml-4'>
-                        <h3 className='text-xl font-semibold'>{FullName} </h3>
+                        <h3 className='text-xl font-semibold'>{user.fullname} </h3>
                         <p className='text-md font-light'>My Account</p>
                     </div>
                 </div>
@@ -64,16 +92,16 @@ function ChatPage() {
                     <div className='text-primary text-lg'> Messages</div>
                     <div>
                         {
-                            contacts.map(({ name, status, img }) => {
+                            userChats.map(() => {
                                 return (
                                     <div className='flex items-center py-4 border-b border-b-gray-100 '>
                                         <div className='cursor-pointer flex items-center'>
                                             <div >
-                                                <img src={img} width={25} height={25} className="rounded-full" />
+                                                <img src="" width={25} height={25} className="rounded-full" />
                                             </div>
                                             <div className='ml-4'>
-                                                <h3 className='text-lg font-semibold'>{name} </h3>
-                                                <p className='text-sm font-light'>{status}</p>
+                                                <h3 className='text-lg font-semibold'>{userChats.receiver_name} </h3>
+                                                <p className='text-sm font-light'>ok</p>
                                             </div>
                                         </div>
 
@@ -117,7 +145,7 @@ function ChatPage() {
                     </div>
                 </div>
                 {/*Chatting of two users*/}
-                <div className='h-[75%] w-full overflow-scroll'>
+                <div className='h-[75%] w-full overflow-scroll overflow-y-auto'>
                     <div className=' px-7 py-7' >
                         <div className=' max-w-[40%] bg-secondary rounded-b-xl rounded-tr-xl p-2 mb-4'>
                             Lorem ipsum dolor sit amet,.
