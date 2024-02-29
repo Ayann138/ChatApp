@@ -29,6 +29,9 @@ function LoginForm() {
       if(response.status == 200){
           Cookies.set('FullName', res.user.fullname);
           Cookies.set('ProfilePic', res.user.profilepic);
+          Cookies.set('User', JSON.stringify(res.user));
+          Cookies.set('Token', res.token);
+
           router.push('/ChatPage')
       }else if(response.status == 400 || response.status == 404){
         alert(res.Status)

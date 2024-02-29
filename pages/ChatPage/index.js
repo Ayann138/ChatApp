@@ -4,6 +4,7 @@ import Input from '../../components/Input'
 import Cookies from 'js-cookie';
 
 function ChatPage() {
+  //  const [user,setUser] = useState(JSON.parse(Cookies.get('user')))
     const FullName =  Cookies.get('FullName');
     const ProfilePic =  Cookies.get('ProfilePic');
     console.log(ProfilePic)
@@ -46,7 +47,7 @@ function ChatPage() {
     ]
     return (
         <div className="w-screen flex">
-            <div className='w-[25%] bg-secondary ' >
+            <div className='w-[25%] h-screen overflow-scroll scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-[#2c9496] bg-secondary ' >
                 <div className='flex items-center my-8 mx-14'>
                     <div className='border border-primary p-[2px] rounded-full'>
                         <img src={`http://localhost:8000/uploads/${ProfilePic}`} width={40} height={40} className="rounded-full" />
