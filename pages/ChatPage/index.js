@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import img1 from '../../public/1.jpeg'
 import Input from '../../components/Input'
 import Cookies from 'js-cookie';
-
+import SideBar from '@/components/sidebar';
 function ChatPage() {
     const [user, setUser] = useState(JSON.parse(Cookies.get('User')))
 
@@ -45,7 +45,9 @@ function ChatPage() {
         },
     ]
 
-    const [userChats , setUserChats] = useState([])
+    const [userChats, setUserChats] = useState([])
+    const [users, setUsers] = useState([])
+
     useEffect(() => {
         const fetchUserChats = async () => {
             try {
@@ -66,54 +68,39 @@ function ChatPage() {
                 console.error('Error fetching user chats:', error);
             }
         };
-    
+        const fetchAllUsers = async () => {
+            try {
+                const response = await fetch(`http://localhost:8000/GetAllUser`, {
+                    method: "GET",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    const users = await response.json();
+                    console.log("All Users:", users);
+                    setUsers(users)
+                } else {
+                    console.error('Error fetching user chats:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching user chats:', error);
+            }
+        };
+        fetchAllUsers();
         if (user && user.uid) {
             fetchUserChats();
-            console.log("userChats Outside: " , userChats)
         }
     }, [user]);
-    
+
     return (
         <div className="w-screen flex">
-            <div className='w-[25%] h-screen overflow-scroll overflow-y-auto bg-secondary ' >
-                <div className='flex items-center my-8 mx-14'>
-                    <div className='border border-primary p-[2px] rounded-full'>
-                        <img src={`http://localhost:8000/uploads/${user.profilepic}`} width={40} height={40} className="rounded-full" />
-
-                    </div>
-                    <div className='ml-4'>
-                        <h3 className='text-xl font-semibold'>{user.fullname} </h3>
-                        <p className='text-md font-light'>My Account</p>
-                    </div>
-                </div>
-                <hr />
-                <div className='mx-14 mt-2'>
-
-                    <div className='text-primary text-lg'> Messages</div>
-                    <div>
-                        {
-                            userChats.map(() => {
-                                return (
-                                    <div className='flex items-center py-4 border-b border-b-gray-100 '>
-                                        <div className='cursor-pointer flex items-center'>
-                                            <div >
-                                                <img src="" width={25} height={25} className="rounded-full" />
-                                            </div>
-                                            <div className='ml-4'>
-                                                <h3 className='text-lg font-semibold'>{userChats.receiver_name} </h3>
-                                                <p className='text-sm font-light'>ok</p>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                )
-                            })
-                        }
-                    </div>
-                </div>
-
-
-            </div>
+            <SideBar
+                UserProfilePic={user.profilepic}
+                UserName = {user.fullname}
+                userChats = {userChats}
+                users = {users}
+            />
             {/* This div is handling the chat of the user */}
 
             <div className='w-[50%] h-screen bg-[#ffffff] flex flex-col items-center'>
