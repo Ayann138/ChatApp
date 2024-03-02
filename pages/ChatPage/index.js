@@ -98,6 +98,7 @@ function ChatPage() {
             <SideBar
                 UserProfilePic={user.profilepic}
                 UserName = {user.fullname}
+                sender_guid = {user.uid}
                 userChats = {userChats}
                 users = {users}
             />

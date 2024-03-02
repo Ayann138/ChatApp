@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import AttachUsers from './UserModal';
+import { v4 as uuidv4 } from 'uuid';
 
-function SideBar({ UserProfilePic, UserName, userChats, users }) {
+function SideBar({ UserProfilePic, UserName,sender_guid, userChats, users }) {
     const [isModalOpen, setIsModalOpen] = useState(false); // State variable to manage modal visibility
 
     // Function to open the modal
@@ -16,6 +17,25 @@ function SideBar({ UserProfilePic, UserName, userChats, users }) {
         setIsModalOpen(false);
     };
 
+    const handleAddChat = async (receiver_guid) =>{
+        const chat_guid = uuidv4();
+      //  const receiver_guid = 
+      try{
+        let response = await fetch('http://localhost:8000/AddUserChat',{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ chat_guid, sender_guid,receiver_guid }),
+        });
+        if(response.status == 200){
+             const res = await response.json()
+            alert(res)
+        }
+      } catch (error) {
+        console.error('Error submitting form data:', error);
+      }
+    }
     return (
         <div className='w-[25%] h-screen overflow-scroll overflow-y-auto bg-secondary'>
             <div className='flex items-center my-8 mx-14'>
@@ -54,14 +74,14 @@ function SideBar({ UserProfilePic, UserName, userChats, users }) {
             {isModalOpen && (
                 <div className="fixed inset-0 flex items-center">
                     <div className="bg-primary p-6 rounded-lg">
-                        <h2 className="text-lg font-semibold mb-4">Users List</h2>
+                        <h2 className="text-lg font-semibold mb-4 text-[#ffff]">Users List</h2>
                         <ul>
                             {/* Render list of users here */}
                             {users.map((chat, index) => (
-                                <li key={index} onClick={() => alert(chat.fullname)}>{chat.fullname}</li>
+                                <li className='text-[#ffff] cursor-pointer' key={index} onClick={()=>handleAddChat(chat.uid)}>{chat.fullname}</li>
                             ))}
                         </ul>
-                        <button onClick={closeModal}>Close</button>
+                        <button className='text-[#ffff]' onClick={closeModal}>Close</button>
                     </div>
                 </div>
             )}
