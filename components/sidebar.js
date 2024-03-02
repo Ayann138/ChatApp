@@ -61,7 +61,7 @@ function SideBar({ UserProfilePic, UserName,sender_guid, userChats, users,handle
                 {/* Button to open modal */}
                 <button onClick={openModal}>Add Chat</button>
                 <div>
-                    {userChats.map((chat, index) => (
+                    {userChats.length > 0 ?  userChats.map((chat, index) => (
                         <div key={index} className='flex items-center py-4 border-b border-b-gray-100'>
                             <div className='cursor-pointer flex items-center'>
                                 <div>
@@ -71,11 +71,11 @@ function SideBar({ UserProfilePic, UserName,sender_guid, userChats, users,handle
                                 </div>
                                 <div className='ml-4' onClick={() => {handleUserChatClick(chat)}}>
                                     <h3 className='text-lg font-semibold'>{chat.receiver_name}</h3>
-                                    <p className='text-sm font-light'>{chat.message}</p>
+                                    <p className='text-sm font-light'>{chat.receiver_email}</p>
                                 </div>
                             </div>
                         </div>
-                    ))}
+                    )) : <div><h3 className='text-lg font-semibold'>No chats</h3></div>}
                 </div>
             </div>
 

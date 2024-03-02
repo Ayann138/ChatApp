@@ -145,29 +145,12 @@ function ChatPage() {
                         <div className='max-w-[40%] bg-primary rounded-b-xl rounded-tl-xl ml-auto p-2 mb-4 text-[#ffff]'>
                             Duis aute irure dolor inoident
                         </div>
-                        <div className=' max-w-[40%] bg-secondary rounded-b-xl rounded-tr-xl p-2 mb-4'>
-                            Lorem ipsum dolor sit amet,ation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        </div>
-                        <div className='max-w-[40%] bg-primary rounded-b-xl rounded-tl-xl ml-auto p-2 mb-4 text-[#ffff]'>
-                            Duis aute irure dolor inoident
-                        </div>
-                        <div className=' max-w-[40%] bg-secondary rounded-b-xl rounded-tr-xl p-2 mb-4'>
-                            Lorem ipsum dolor sit amet,ation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        </div>
-                        <div className='max-w-[40%] bg-primary rounded-b-xl rounded-tl-xl ml-auto p-2 mb-4 text-[#ffff]'>
-                            Duis aute irure dolor inoident
-                        </div>
-                        <div className=' max-w-[40%] bg-secondary rounded-b-xl rounded-tr-xl p-2 mb-4'>
-                            Lorem ipsum dolor sit amet,ation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        </div>
-                        <div className='max-w-[40%] bg-primary rounded-b-xl rounded-tl-xl ml-auto p-2 mb-4 text-[#ffff]'>
-                            Duis aute irure dolor inoident
-                        </div>
+
 
                     </div>
                 </div>
                 <div className='p-7 w-full flex items-center'>
-                    <Input placeholder='type a message' className='w-full' inputClassName='p-2 border-0 shadow-lg rounded-full bg-light focus:ring-0 focus:border-0 outline-none' />
+                <input type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Type Message Here..."/>
                     <div className='ml-4 cursor-pointer bg-light rounded-full'>
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-send" width="30" height="30" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
