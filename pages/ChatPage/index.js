@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import SideBar from '@/components/sidebar';
 function ChatPage() {
     const [user, setUser] = useState(JSON.parse(Cookies.get('User')))
+    const [chatName , setChatName] = useState("")
 
     console.log("USer: ", user)
 
@@ -92,7 +93,9 @@ function ChatPage() {
             fetchUserChats();
         }
     }, [user]);
-
+    const handleUserChatClick = (receiver) =>{
+        setChatName(receiver.receiver_name)
+    }
     return (
         <div className="w-screen flex">
             <SideBar
@@ -101,6 +104,7 @@ function ChatPage() {
                 sender_guid = {user.uid}
                 userChats = {userChats}
                 users = {users}
+                handleUserChatClick ={handleUserChatClick}
             />
             {/* This div is handling the chat of the user */}
 
@@ -111,7 +115,7 @@ function ChatPage() {
                     </div>
                     <div className='ml-6 mr-auto'>
 
-                        <h3 className='text-xl '>Ahmad Hasan</h3>
+                        <h3 className='text-xl '>{chatName}</h3>
                         <p className='text-md font-light'>Online</p>
                     </div>
                     {/* */}
