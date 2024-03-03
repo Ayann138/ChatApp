@@ -138,6 +138,25 @@ function ChatPage() {
             console.log("Error Sending Message: ", error)
         }
     }
+    const fetchUserChats = async () => {
+        try {
+            const response = await fetch(`http://localhost:8000/GetAllUserChats/${user.uid}`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.ok) {
+                const userChats = await response.json();
+                console.log("UserChats:", userChats);
+                setUserChats(userChats)
+            } else {
+                console.error('Error fetching user chats:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error fetching user chats:', error);
+        }
+    };
     return (
         <div className="w-screen flex">
             <SideBar
@@ -147,6 +166,7 @@ function ChatPage() {
                 userChats={userChats}
                 users={users}
                 handleUserChatClick={handleUserChatClick}
+                fetchUserChats={fetchUserChats}
             />
             {/* This div is handling the chat of the user */}
 

@@ -5,7 +5,7 @@ import AttachUsers from './UserModal';
 import { v4 as uuidv4 } from 'uuid';
 import img1 from '../public/2.jpeg'
 
-function SideBar({ UserProfilePic, UserName,sender_guid, userChats, users,handleUserChatClick }) {
+function SideBar({ UserProfilePic, UserName,sender_guid, userChats, users,handleUserChatClick,fetchUserChats }) {
     const [isModalOpen, setIsModalOpen] = useState(false); // State variable to manage modal visibility
     // Function to open the modal
     const openModal = () => {
@@ -15,6 +15,7 @@ function SideBar({ UserProfilePic, UserName,sender_guid, userChats, users,handle
     // Function to close the modal
     const closeModal = () => {
         setIsModalOpen(false);
+        fetchUserChats()
     };
 
     const handleAddChat = async (receiver_guid) => {
