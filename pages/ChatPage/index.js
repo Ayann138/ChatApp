@@ -9,6 +9,7 @@ function ChatPage() {
     const [user, setUser] = useState(JSON.parse(Cookies.get('User')))
     const [currentChatUser, setCurrentChatUser] = useState([])
     const [message_text, setMessage] = useState("")
+    const [chatMessages, setChatMessages] = useState([])
     console.log("USer: ", user)
 
     useEffect(() => {
@@ -95,30 +96,46 @@ function ChatPage() {
             fetchUserChats();
         }
     }, [user]);
-    const handleUserChatClick = (ChatUser) => {
+    const handleUserChatClick = async (ChatUser) => {
         setCurrentChatUser(ChatUser)
+        try {
+            let response = await fetch(`http://localhost:8000/GetMessages/${ChatUser.chat_guid}`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            let res = await response.json()
+            if (response.status == 200) {
+                setChatMessages(res)
+            }
+
+        } catch (error) {
+            console.log("Error Getting Message: ", error)
+        }
         //Get Users Conversation
     }
-    const handelSendMessage = async () =>{
+    const handelSendMessage = async () => {
         const message_guid = uuidv4();
         let chat_guid = currentChatUser.chat_guid;
         let sender_guid = user.uid;
         const currentDate = new Date();
         const message_date = currentDate.toISOString();
-        try{
-            let response = await fetch("http://localhost:8000/SendMessage" , {
+        try {
+            let response = await fetch("http://localhost:8000/SendMessage", {
                 method: "POST",
-                headers:{
+                headers: {
                     'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({ message_guid, chat_guid,sender_guid, message_text,message_date  }),
+                },
+                body: JSON.stringify({ message_guid, chat_guid, sender_guid, message_text, message_date }),
             })
             let res = await response.text()
-            if(response.status == 200){
+            if (response.status == 200) {
                 alert(res)
             }
-        }catch(error){
-            console.log("Error Sending Message: " , error)
+            setMessage("")
+        } catch (error) {
+            console.log("Error Sending Message: ", error)
         }
     }
     return (
@@ -164,14 +181,17 @@ function ChatPage() {
                 {/*Chatting of two users*/}
                 <div className='h-[75%] w-full overflow-scroll overflow-y-auto'>
                     <div className=' px-7 py-7' >
-                        <div className=' max-w-[40%] bg-secondary rounded-b-xl rounded-tr-xl p-2 mb-4'>
+                        {chatMessages.map((message, index) => (
+                            <div key={index} className={message.sender_guid === user.uid ? 'bg-primary rounded-b-xl rounded-tl-xl ml-auto p-2 mb-4 text-[#ffff] max-w-[40%]' : 'max-w-[40%] bg-secondary rounded-b-xl rounded-tr-xl p-2 mb-4'}>
+                                {message.message_text}
+                            </div>
+                        ))}
+                        {/* <div className=' max-w-[40%] bg-secondary rounded-b-xl rounded-tr-xl p-2 mb-4'>
                             Lorem ipsum dolor sit amet,.
                         </div>
                         <div className='max-w-[40%] bg-primary rounded-b-xl rounded-tl-xl ml-auto p-2 mb-4 text-[#ffff]'>
                             Duis aute irure dolor inoident
-                        </div>
-
-
+                        </div> */}
                     </div>
                 </div>
                 <div className='p-7 w-full flex items-center'>
