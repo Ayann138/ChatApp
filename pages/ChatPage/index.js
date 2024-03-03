@@ -3,10 +3,12 @@ import img1 from '../../public/1.jpeg'
 import Input from '../../components/Input'
 import Cookies from 'js-cookie';
 import SideBar from '@/components/sidebar';
+import { v4 as uuidv4 } from 'uuid';
+
 function ChatPage() {
     const [user, setUser] = useState(JSON.parse(Cookies.get('User')))
-    const [chatName , setChatName] = useState("")
-
+    const [currentChatUser, setCurrentChatUser] = useState([])
+    const [message_text, setMessage] = useState("")
     console.log("USer: ", user)
 
     useEffect(() => {
@@ -93,18 +95,41 @@ function ChatPage() {
             fetchUserChats();
         }
     }, [user]);
-    const handleUserChatClick = (receiver) =>{
-        setChatName(receiver.receiver_name)
+    const handleUserChatClick = (ChatUser) => {
+        setCurrentChatUser(ChatUser)
+        //Get Users Conversation
+    }
+    const handelSendMessage = async () =>{
+        const message_guid = uuidv4();
+        let chat_guid = currentChatUser.chat_guid;
+        let sender_guid = user.uid;
+        const currentDate = new Date();
+        const message_date = currentDate.toISOString();
+        try{
+            let response = await fetch("http://localhost:8000/SendMessage" , {
+                method: "POST",
+                headers:{
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ message_guid, chat_guid,sender_guid, message_text,message_date  }),
+            })
+            let res = await response.text()
+            if(response.status == 200){
+                alert(res)
+            }
+        }catch(error){
+            console.log("Error Sending Message: " , error)
+        }
     }
     return (
         <div className="w-screen flex">
             <SideBar
                 UserProfilePic={user.profilepic}
-                UserName = {user.fullname}
-                sender_guid = {user.uid}
-                userChats = {userChats}
-                users = {users}
-                handleUserChatClick ={handleUserChatClick}
+                UserName={user.fullname}
+                sender_guid={user.uid}
+                userChats={userChats}
+                users={users}
+                handleUserChatClick={handleUserChatClick}
             />
             {/* This div is handling the chat of the user */}
 
@@ -115,7 +140,7 @@ function ChatPage() {
                     </div>
                     <div className='ml-6 mr-auto'>
 
-                        <h3 className='text-xl '>{chatName}</h3>
+                        <h3 className='text-xl '>{currentChatUser.receiver_name}</h3>
                         <p className='text-md font-light'>Online</p>
                     </div>
                     {/* */}
@@ -150,9 +175,9 @@ function ChatPage() {
                     </div>
                 </div>
                 <div className='p-7 w-full flex items-center'>
-                <input type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Type Message Here..."/>
+                    <input type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Type Message Here..." value={message_text} onChange={(e) => setMessage(e.target.value)} />
                     <div className='ml-4 cursor-pointer bg-light rounded-full'>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-send" width="30" height="30" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <svg xmlns="http://www.w3.org/2000/svg" onClick={() => handelSendMessage()} class="icon icon-tabler icon-tabler-send" width="30" height="30" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <path d="M10 14l11 -11" />
                             <path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5" />
