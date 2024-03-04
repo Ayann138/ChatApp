@@ -4,12 +4,15 @@ import Input from '../../components/Input'
 import Cookies from 'js-cookie';
 import SideBar from '@/components/sidebar';
 import { v4 as uuidv4 } from 'uuid';
+import { io } from 'socket.io-client';
+
 
 function ChatPage() {
     const [user, setUser] = useState(JSON.parse(Cookies.get('User')))
     const [currentChatUser, setCurrentChatUser] = useState([])
     const [message_text, setMessage] = useState("")
     const [chatMessages, setChatMessages] = useState([])
+    const [socket, setSocket] = useState(null)
     console.log("USer: ", user)
 
     useEffect(() => {
@@ -51,7 +54,16 @@ function ChatPage() {
 
     const [userChats, setUserChats] = useState([])
     const [users, setUsers] = useState([])
+    useEffect(() =>{
+        setSocket(io('http://localhost:8080'))
+    },[])
 
+    useEffect(() =>{
+        socket?.emit('addUser' , user?.uid)
+        socket?.on('getUsers' , users =>{
+            console.log("Active User: " , users)
+        })
+    },[socket])
     useEffect(() => {
         const fetchUserChats = async () => {
             try {
