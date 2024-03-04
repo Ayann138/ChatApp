@@ -63,6 +63,11 @@ function ChatPage() {
         socket?.on('getUsers' , users =>{
             console.log("Active User: " , users)
         })
+        socket?.on('getMessage', data => {
+            console.log("Data Msg: ", data);
+            setChatMessages(prevMessages => [...prevMessages, data]);
+        });
+        
     },[socket])
     useEffect(() => {
         const fetchUserChats = async () => {
@@ -133,6 +138,10 @@ function ChatPage() {
         let sender_guid = user.uid;
         const currentDate = new Date();
         const message_date = currentDate.toISOString();
+        console.log("currentChatUser: " , currentChatUser)
+        socket?.emit('sendMessage', {
+            message_guid, chat_guid, sender_guid, message_text, message_date,receiver_guid: currentChatUser.receiver_guid
+        })
         try {
             let response = await fetch("http://localhost:8000/SendMessage", {
                 method: "POST",
@@ -143,7 +152,7 @@ function ChatPage() {
             })
             let res = await response.text()
             if (response.status == 200) {
-                alert(res)
+                console.log(res)
             }
             setMessage("")
         } catch (error) {
