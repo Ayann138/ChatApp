@@ -11,6 +11,7 @@ function ChatPage() {
     const [user, setUser] = useState(JSON.parse(Cookies.get('User')))
     const [currentChatUser, setCurrentChatUser] = useState([])
     const [message_text, setMessage] = useState("")
+    const [activeUsers, setActiveUsers] = useState([])
     const [chatMessages, setChatMessages] = useState([])
     const [socket, setSocket] = useState(null)
     console.log("Lodded-In User: ", user)
@@ -54,21 +55,22 @@ function ChatPage() {
 
     const [userChats, setUserChats] = useState([])
     const [users, setUsers] = useState([])
-    useEffect(() =>{
+    useEffect(() => {
         setSocket(io('http://localhost:8080'))
-    },[])
+    }, [])
 
-    useEffect(() =>{
-        socket?.emit('addUser' , user?.uid)
-        socket?.on('getUsers' , users =>{
-            console.log("Active User: " , users)
+    useEffect(() => {
+        socket?.emit('addUser', user?.uid)
+        socket?.on('getUsers', users => {
+            console.log("Active User: ", users)
+            setActiveUsers(users)
         })
         socket?.on('getMessage', data => {
             console.log("Data Msg: ", data);
             setChatMessages(prevMessages => [...prevMessages, data]);
         });
-        
-    },[socket])
+
+    }, [socket])
     useEffect(() => {
         const fetchUserChats = async () => {
             try {
@@ -138,9 +140,9 @@ function ChatPage() {
         let sender_guid = user.uid;
         const currentDate = new Date();
         const message_date = currentDate.toISOString();
-        console.log("currentChatUser: " , currentChatUser)
+        console.log("currentChatUser: ", currentChatUser)
         socket?.emit('sendMessage', {
-            message_guid, chat_guid, sender_guid, message_text, message_date,receiver_guid: currentChatUser.receiver_guid
+            message_guid, chat_guid, sender_guid, message_text, message_date, receiver_guid: currentChatUser.receiver_guid
         })
         try {
             let response = await fetch("http://localhost:8000/SendMessage", {
@@ -197,10 +199,12 @@ function ChatPage() {
                         <img src="2.jpeg" width={30} height={28} className="rounded-full" />
                     </div>
                     <div className='ml-6 mr-auto'>
-
-                        <h3 className='text-xl '>{currentChatUser.receiver_name}</h3>
-                        <p className='text-md font-light'>Online</p>
+                        <h3 className='text-xl'>{currentChatUser.receiver_name}</h3>
+                        <p className={`text-md font-light ${activeUsers.some(user => user.id === currentChatUser.receiver_guid) ? 'text-green-500' : 'text-red-500'}`}>
+                            {activeUsers.some(user => user.userId === currentChatUser.receiver_guid) ? 'Online' : 'Offline'}
+                        </p>
                     </div>
+
                     {/* */}
                     {/* This div is handling the video call and phone call icon */}
                     <div className='cursor-pointer flex'>
