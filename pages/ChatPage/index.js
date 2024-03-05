@@ -13,7 +13,7 @@ function ChatPage() {
     const [message_text, setMessage] = useState("")
     const [chatMessages, setChatMessages] = useState([])
     const [socket, setSocket] = useState(null)
-    console.log("USer: ", user)
+    console.log("Lodded-In User: ", user)
 
     useEffect(() => {
         //console.log("User in chat: " , FullName)
