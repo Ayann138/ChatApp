@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import img1 from '../../public/1.jpeg'
 import Input from '../../components/Input'
 import Cookies from 'js-cookie';
@@ -15,50 +15,15 @@ function ChatPage() {
     const [chatMessages, setChatMessages] = useState([])
     const [socket, setSocket] = useState(null)
     console.log("Lodded-In User: ", user)
+    const msgRef = useRef(null);
 
-    useEffect(() => {
-        //console.log("User in chat: " , FullName)
 
-    }, [])
-    const contacts = [
-        {
-            name: 'Maaz',
-            status: 'GerayBazz',
-            img: '2.jpeg'
-        },
-        {
-            name: 'Ahmad Hasan',
-            status: 'Available',
-            img: '3.jpeg'
-        },
-        {
-            name: 'Ali Hamza',
-            status: 'GerayBazz',
-            img: '2.jpeg'
-        },
-        {
-            name: 'Umar Rathore',
-            status: 'Introvert',
-            img: '1.jpeg'
-        },
-        {
-            name: 'Arhum Sharif',
-            status: 'Team Lead',
-            img: '2.jpeg'
-        },
-        {
-            name: 'Zaim Rana',
-            status: 'Avaialble',
-            img: '3.jpeg'
-        },
-    ]
 
     const [userChats, setUserChats] = useState([])
     const [users, setUsers] = useState([])
     useEffect(() => {
         setSocket(io('http://localhost:8080'))
     }, [])
-
     useEffect(() => {
         socket?.emit('addUser', user?.uid)
         socket?.on('getUsers', users => {
@@ -115,6 +80,10 @@ function ChatPage() {
             fetchUserChats();
         }
     }, [user]);
+
+    useEffect(() => {
+        msgRef?.current?.scrollIntoView({ behaviou: 'smooth' })
+    }, [chatMessages])
     const handleUserChatClick = async (ChatUser) => {
         setCurrentChatUser(ChatUser)
         try {
@@ -227,9 +196,13 @@ function ChatPage() {
                 <div className='h-[75%] w-full overflow-scroll overflow-y-auto'>
                     <div className=' px-7 py-7' >
                         {chatMessages.map((message, index) => (
-                            <div key={index} className={message.sender_guid === user.uid ? 'bg-primary rounded-b-xl rounded-tl-xl ml-auto p-2 mb-4 text-[#ffff] max-w-[40%]' : 'max-w-[40%] bg-secondary rounded-b-xl rounded-tr-xl p-2 mb-4'}>
-                                {message.message_text}
-                            </div>
+
+                            <>
+                                <div key={index} className={message.sender_guid === user.uid ? 'bg-primary rounded-b-xl rounded-tl-xl ml-auto p-2 mb-4 text-[#ffff] max-w-[40%]' : 'max-w-[40%] bg-secondary rounded-b-xl rounded-tr-xl p-2 mb-4'}>
+                                    {message.message_text}
+                                </div>
+                                <div ref={msgRef}></div>
+                            </>
                         ))}
                         {/* <div className=' max-w-[40%] bg-secondary rounded-b-xl rounded-tr-xl p-2 mb-4'>
                             Lorem ipsum dolor sit amet,.

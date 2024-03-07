@@ -74,6 +74,7 @@ function SideBar({ UserProfilePic, UserName,sender_guid, userChats, users,handle
                                     <h3 className='text-lg font-semibold'>{chat.receiver_name}</h3>
                                     <p className='text-sm font-light'>{chat.receiver_email}</p>
                                 </div>
+
                             </div>
                         </div>
                     )) : <div><h3 className='text-lg font-semibold'>No chats</h3></div>}
