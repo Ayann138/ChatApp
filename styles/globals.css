@@ -25,7 +25,9 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
-
+::-webkit-scrollbar{
+  display: none;
+}
 @layer utilities {
   .text-balance {
     text-wrap: balance;
