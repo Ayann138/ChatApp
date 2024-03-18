@@ -4,8 +4,8 @@ import Cookies from 'js-cookie';
 import AttachUsers from './UserModal';
 import { v4 as uuidv4 } from 'uuid';
 import img1 from '../public/2.jpeg'
-
-function RightBar({ UserProfilePic, UserName,sender_guid, userChats, users,handleUserChatClick,fetchUserChats }) {
+import GroupModal from './GroupModal';
+function RightBar({ UserProfilePic, UserName, sender_guid, userChats, users, handleUserChatClick, fetchUserChats }) {
     const [isModalOpen, setIsModalOpen] = useState(false); // State variable to manage modal visibility
     // Function to open the modal
     const openModal = () => {
@@ -29,7 +29,7 @@ function RightBar({ UserProfilePic, UserName,sender_guid, userChats, users,handl
                 },
                 body: JSON.stringify({ chat_guid, sender_guid, receiver_guid }),
             });
-    
+
             if (response.ok) {
                 const res = await response.text();
                 alert(res);
@@ -41,7 +41,7 @@ function RightBar({ UserProfilePic, UserName,sender_guid, userChats, users,handl
             console.error('Error submitting form data:', error);
         }
     }
-    
+
 
     return (
         <div className=' h-screen overflow-scroll overflow-y-auto bg-secondary'>
@@ -62,7 +62,7 @@ function RightBar({ UserProfilePic, UserName,sender_guid, userChats, users,handl
                 {/* Button to open modal */}
                 <button onClick={openModal}>Create New Group</button>
                 <div>
-                    {userChats.length > 0 ?  userChats.map((chat, index) => (
+                    {userChats.length > 0 ? userChats.map((chat, index) => (
                         <div key={index} className='flex items-center py-4 border-b border-b-gray-100'>
                             <div className='cursor-pointer flex items-center'>
                                 <div>
@@ -70,7 +70,7 @@ function RightBar({ UserProfilePic, UserName,sender_guid, userChats, users,handl
                                     <img src='3.jpeg' width={25} height={25} className="rounded-full" />
 
                                 </div>
-                                <div className='ml-4' onClick={() => {handleUserChatClick(chat)}}>
+                                <div className='ml-4' onClick={() => { handleUserChatClick(chat) }}>
                                     <h3 className='text-lg font-semibold'>{chat.receiver_name}</h3>
                                     <p className='text-sm font-light'>{chat.receiver_email}</p>
                                 </div>
@@ -81,21 +81,12 @@ function RightBar({ UserProfilePic, UserName,sender_guid, userChats, users,handl
                 </div>
             </div>
 
-            {/* Modal component */}
-            {isModalOpen && (
-                <div className="fixed inset-0 flex items-center">
-                    <div className="bg-primary p-6 rounded-lg">
-                        <h2 className="text-lg font-semibold mb-4 text-[#ffff]">Users List</h2>
-                        <ul>
-                            {/* Render list of users here */}
-                            {users.map((chat, index) => (
-                                <li className='text-[#ffff] cursor-pointer' key={index} onClick={()=>handleAddChat(chat.uid)}>{chat.fullname}</li>
-                            ))}
-                        </ul>
-                        <button className='text-[#ffff]' onClick={closeModal}>Close</button>
-                    </div>
-                </div>
-            )}
+            <GroupModal
+                isModalOpen={isModalOpen}
+                users={users}
+                handleAddChat={handleAddChat}
+                closeModal={closeModal}
+            />
 
         </div>
     );

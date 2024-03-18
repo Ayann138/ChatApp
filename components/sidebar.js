@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import AttachUsers from './UserModal';
 import { v4 as uuidv4 } from 'uuid';
 import img1 from '../public/2.jpeg'
-
+import Modal from './UserModal';
 function SideBar({ UserProfilePic, UserName,sender_guid, userChats, users,handleUserChatClick,fetchUserChats }) {
     const [isModalOpen, setIsModalOpen] = useState(false); // State variable to manage modal visibility
     // Function to open the modal
@@ -81,21 +81,12 @@ function SideBar({ UserProfilePic, UserName,sender_guid, userChats, users,handle
                 </div>
             </div>
 
-            {/* Modal component */}
-            {isModalOpen && (
-                <div className="fixed inset-0 flex items-center">
-                    <div className="bg-primary p-6 rounded-lg">
-                        <h2 className="text-lg font-semibold mb-4 text-[#ffff]">Users List</h2>
-                        <ul>
-                            {/* Render list of users here */}
-                            {users.map((chat, index) => (
-                                <li className='text-[#ffff] cursor-pointer' key={index} onClick={()=>handleAddChat(chat.uid)}>{chat.fullname}</li>
-                            ))}
-                        </ul>
-                        <button className='text-[#ffff]' onClick={closeModal}>Close</button>
-                    </div>
-                </div>
-            )}
+            <Modal
+                isModalOpen={isModalOpen}
+                users={users}
+                handleAddChat={handleAddChat}
+                closeModal={closeModal}
+            />
 
         </div>
     );
