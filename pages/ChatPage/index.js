@@ -16,6 +16,7 @@ function ChatPage() {
     console.log("Lodded-In User: ", user)
     const msgRef = useRef(null);
 
+    let prevDate = null; // Initialize previous date as null
 
 
     const [userChats, setUserChats] = useState([])
@@ -194,21 +195,35 @@ function ChatPage() {
                 {/*Chatting of two users*/}
                 <div className='h-[75%] w-full overflow-scroll overflow-y-auto'>
                     <div className=' px-7 py-7' >
-                        {chatMessages.map((message, index) => {
-                            // Parsing the date string to obtain the time
-                            const messageTime = new Date(message.message_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-                            return (
-                                <div key={index} className={message.sender_guid === user.uid ? 'bg-primary rounded-b-xl rounded-tl-xl ml-auto p-2 mb-4 text-[#ffff] max-w-[40%] relative' : 'max-w-[40%] bg-secondary rounded-b-xl rounded-tr-xl p-2 mb-4 relative'}>
-                                    <div className="relative">
-                                        <div className="absolute bottom-0 right-0 text-xs text-gray-500">{messageTime}</div>
-                                        <div className="relative">
-                                            {message.message_text}
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
+{chatMessages.map((message, index) => {
+    // Parsing the date string to obtain the time
+    const messageTime = new Date(message.message_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const messageDate = new Date(message.message_date).toLocaleDateString();
+
+    // Check if the current message date is different from the previous message date
+    const showDateSeparator = messageDate !== prevDate;
+    prevDate = messageDate; // Update previous date for next iteration
+
+    return (
+        <div key={index}>
+            {showDateSeparator && (
+                <div className="text-center my-2">
+                    <span className="text-sm text-gray-500">{messageDate}</span>
+                </div>
+            )}
+            <div className={message.sender_guid === user.uid ? 'bg-primary rounded-b-xl rounded-tl-xl ml-auto p-2 mb-4 text-[#ffff] max-w-[40%] relative' : 'max-w-[40%] bg-secondary rounded-b-xl rounded-tr-xl p-2 mb-4 relative'}>
+                <div className="relative">
+                    <div className="absolute top-0 right-0 text-xs text-gray-500">{messageTime}</div>
+                    <div className="relative">
+                        {message.message_text}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+})}
+
 
                         {/* <div className=' max-w-[40%] bg-secondary rounded-b-xl rounded-tr-xl p-2 mb-4'>
                             Lorem ipsum dolor sit amet,.
