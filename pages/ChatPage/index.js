@@ -5,8 +5,7 @@ import Cookies from 'js-cookie';
 import SideBar from '@/components/sidebar';
 import { v4 as uuidv4 } from 'uuid';
 import { io } from 'socket.io-client';
-
-
+import RightBar from '@/components/RightBar'
 function ChatPage() {
     const [user, setUser] = useState(JSON.parse(Cookies.get('User')))
     const [currentChatUser, setCurrentChatUser] = useState([])
@@ -232,7 +231,16 @@ function ChatPage() {
                 </div>
             </div>
 
-            <div className='w-[25%]  h-screen bg-secondary'></div>
+            <div className='w-[25%]  h-screen bg-secondary'>
+                <RightBar
+                    UserProfilePic={user.profilepic}
+                    UserName={user.fullname}
+                    sender_guid={user.uid}
+                    userChats={userChats}
+                    users={users}
+                    handleUserChatClick={handleUserChatClick}
+                    fetchUserChats={fetchUserChats} />
+            </div>
 
         </div>
     );
