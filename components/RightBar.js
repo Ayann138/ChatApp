@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect} from 'react';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import AttachUsers from './UserModal';
@@ -17,7 +17,34 @@ function RightBar({ UserProfilePic, UserName, sender_guid, userChats, users, han
         setIsModalOpen(false);
         fetchUserChats()
     };
+    const [user, setUser] = useState(JSON.parse(Cookies.get('User')))
+    const [groupChats, setGroupChats] = useState([])
 
+    useEffect(() => {
+        const fetchUserChats = async () => {
+            try {
+                const response = await fetch(`http://localhost:8000/GetAllUserChats/${user.uid}`, {
+                    method: "GET",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    const userChats = await response.json();
+                    console.log("UserChats:", userChats);
+                    setGroupChats(userChats)
+                } else {
+                    console.error('Error fetching user chats:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching user chats:', error);
+            }
+        };
+
+        if (user && user.uid) {
+            fetchUserChats();
+        }
+    }, [user]);
     const handleAddChat = async (receiver_guid) => {
         const chat_guid = uuidv4();
         //  const receiver_guid = 
