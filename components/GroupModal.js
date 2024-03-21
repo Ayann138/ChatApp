@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 const GroupModal = ({ isModalOpen, users, handleAddChat, closeModal }) => {
   const [groupName, setGroupName] = useState('');
@@ -22,13 +23,15 @@ const GroupModal = ({ isModalOpen, users, handleAddChat, closeModal }) => {
   const handleCreateGroup = async () => {
     console.log("GroupName: " , groupName)
     console.log("selectedUsers: " , selectedUsers)
+    const group_guid = uuidv4();
+
     try {
         let response = await fetch("http://localhost:8000/CreateGroup", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ groupName,selectedUsers }),
+            body: JSON.stringify({group_guid, groupName,selectedUsers }),
         })
         let res = await response.text()
         if (response.status == 200) {
