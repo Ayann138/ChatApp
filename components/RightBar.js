@@ -1,4 +1,4 @@
-import React, { useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import AttachUsers from './UserModal';
@@ -23,7 +23,7 @@ function RightBar({ UserProfilePic, UserName, sender_guid, userChats, users, han
     useEffect(() => {
         const fetchUserChats = async () => {
             try {
-                const response = await fetch(`http://localhost:8000/GetAllUserChats/${user.uid}`, {
+                const response = await fetch(`http://localhost:8000/GetGroups/${user.uid}`, {
                     method: "GET",
                     headers: {
                         'Content-Type': 'application/json',
@@ -89,22 +89,21 @@ function RightBar({ UserProfilePic, UserName, sender_guid, userChats, users, han
                 {/* Button to open modal */}
                 <button onClick={openModal}>Create New Group</button>
                 <div>
-                    {userChats.length > 0 ? userChats.map((chat, index) => (
+                    {groupChats.length > 0 ? groupChats.map((chat, index) => (
                         <div key={index} className='flex items-center py-4 border-b border-b-gray-100'>
                             <div className='cursor-pointer flex items-center'>
                                 <div>
                                     {/* <img src={chat.imageSrc} width={25} height={25} className="rounded-full" /> */}
                                     <img src='3.jpeg' width={25} height={25} className="rounded-full" />
-
                                 </div>
                                 <div className='ml-4' onClick={() => { handleUserChatClick(chat) }}>
-                                    <h3 className='text-lg font-semibold'>{chat.receiver_name}</h3>
-                                    <p className='text-sm font-light'>{chat.receiver_email}</p>
+                                    {/* Access groupname from the first element of chats array */}
+                                    <h3 className='text-lg font-semibold'>{chat.chats[0].groupname}</h3>
                                 </div>
-
                             </div>
                         </div>
                     )) : <div><h3 className='text-lg font-semibold'>No chats</h3></div>}
+
                 </div>
             </div>
 
