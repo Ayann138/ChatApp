@@ -5,7 +5,7 @@ import AttachUsers from './UserModal';
 import { v4 as uuidv4 } from 'uuid';
 import img1 from '../public/2.jpeg'
 import GroupModal from './GroupModal';
-function RightBar({ UserProfilePic, UserName, sender_guid, userChats, users, handleUserChatClick, fetchUserChats }) {
+function RightBar({ UserProfilePic, UserName, sender_guid, userChats, users, handleGroupChatClick, fetchUserChats }) {
     const [isModalOpen, setIsModalOpen] = useState(false); // State variable to manage modal visibility
     // Function to open the modal
     const openModal = () => {
@@ -93,11 +93,9 @@ function RightBar({ UserProfilePic, UserName, sender_guid, userChats, users, han
                         <div key={index} className='flex items-center py-4 border-b border-b-gray-100'>
                             <div className='cursor-pointer flex items-center'>
                                 <div>
-                                    {/* <img src={chat.imageSrc} width={25} height={25} className="rounded-full" /> */}
                                     <img src='3.jpeg' width={25} height={25} className="rounded-full" />
                                 </div>
-                                <div className='ml-4' onClick={() => { handleUserChatClick(chat) }}>
-                                    {/* Access groupname from the first element of chats array */}
+                                <div className='ml-4' onClick={() => { handleGroupChatClick(chat) }}>
                                     <h3 className='text-lg font-semibold'>{chat.chats[0].groupname}</h3>
                                 </div>
                             </div>

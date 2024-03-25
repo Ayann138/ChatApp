@@ -103,6 +103,25 @@ function ChatPage() {
         }
         //Get Users Conversation
     }
+    const handleGroupChatClick = async (Group) => {
+        setCurrentChatUser(Group.chats[0].groupname)
+        try {
+            let response = await fetch(`http://localhost:8000/GetGroupMessages/${Group.chats[0].groupguid}`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            let res = await response.json()
+            if (response.status == 200) {
+                setChatMessages(res)
+            }
+
+        } catch (error) {
+            console.log("Error Getting Message: ", error)
+        }
+        //Get Users Conversation
+    }
     const handelSendMessage = async () => {
         const message_guid = uuidv4();
         let chat_guid = currentChatUser.chat_guid;
@@ -260,7 +279,7 @@ function ChatPage() {
                     sender_guid={user.uid}
                     userChats={userChats}
                     users={users}
-                    handleUserChatClick={handleUserChatClick}
+                    handleGroupChatClick={handleGroupChatClick}
                     fetchUserChats={fetchUserChats} />
             </div>
 
