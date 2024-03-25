@@ -105,6 +105,8 @@ function ChatPage() {
     }
     const handleGroupChatClick = async (Group) => {
         setCurrentChatUser(Group.chats[0].groupname)
+        console.log("In Group Click...")
+        console.log(currentChatUser)
         try {
             let response = await fetch(`http://localhost:8000/GetGroupMessages/${Group.chats[0].groupguid}`, {
                 method: "GET",
