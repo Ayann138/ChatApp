@@ -9,9 +9,12 @@ import RightBar from '@/components/RightBar'
 function ChatPage() {
     const [user, setUser] = useState(JSON.parse(Cookies.get('User')))
     const [currentChatUser, setCurrentChatUser] = useState([])
+    const [currentGroup, setcurrentGroup] = useState([])
     const [message_text, setMessage] = useState("")
     const [activeUsers, setActiveUsers] = useState([])
     const [chatMessages, setChatMessages] = useState([])
+    const [groupMessages, setGroupMessages] = useState([])
+    var [isGroupChat , setIsGroupChat] = useState(false)
     const [socket, setSocket] = useState(null)
     console.log("Lodded-In User: ", user)
     const msgRef = useRef(null);
@@ -85,7 +88,10 @@ function ChatPage() {
         msgRef?.current?.scrollIntoView({ behaviou: 'smooth' })
     }, [chatMessages])
     const handleUserChatClick = async (ChatUser) => {
+        setIsGroupChat(false)
         setCurrentChatUser(ChatUser)
+        console.log("G: ", isGroupChat)
+
         try {
             let response = await fetch(`http://localhost:8000/GetMessages/${ChatUser.chat_guid}`, {
                 method: "GET",
@@ -104,9 +110,11 @@ function ChatPage() {
         //Get Users Conversation
     }
     const handleGroupChatClick = async (Group) => {
-        setCurrentChatUser(Group.chats[0].groupname)
+        setIsGroupChat(true)
+        setcurrentGroup(Group)
         console.log("In Group Click...")
-        console.log(currentChatUser)
+        console.log(currentGroup)
+        console.log("G: ", isGroupChat)
         try {
             let response = await fetch(`http://localhost:8000/GetGroupMessages/${Group.chats[0].groupguid}`, {
                 method: "GET",
@@ -188,12 +196,26 @@ function ChatPage() {
                     <div>
                         <img src="2.jpeg" width={30} height={28} className="rounded-full" />
                     </div>
-                    <div className='ml-6 mr-auto'>
-                        <h3 className='text-xl'>{currentChatUser.receiver_name}</h3>
-                        <p className={`text-md font-light ${activeUsers.some(user => user.id === currentChatUser.receiver_guid) ? 'text-green-500' : 'text-red-500'}`}>
-                            {activeUsers.some(user => user.userId === currentChatUser.receiver_guid) ? 'Online' : 'Offline'}
-                        </p>
-                    </div>
+                    {
+                        isGroupChat ? (
+                            <div className="ml-6 mr-auto">
+                                <h3 className="text-xl">{currentGroup.chats[0]?.groupname}</h3>
+                                {console.log("In cond: " , currentGroup.chats[0]?.groupname)}
+                            </div>
+                        ) : (
+                            <div className="ml-6 mr-auto">
+                                <h3 className="text-xl">{currentChatUser.receiver_name}</h3>
+                                {console.log("In cond: " , currentGroup)}
+
+                                <p className={`text-md font-light ${activeUsers.some(user => user.id === currentChatUser.receiver_guid) ? 'text-green-500' : 'text-red-500'}`}>
+                                    {activeUsers.some(user => user.userId === currentChatUser.receiver_guid) ? 'Online' : 'Offline'}
+                                </p>
+                            </div>
+                        )
+                    }
+
+
+
 
                     {/* */}
                     {/* This div is handling the video call and phone call icon */}
@@ -217,33 +239,33 @@ function ChatPage() {
                 <div className='h-[75%] w-full overflow-scroll overflow-y-auto'>
                     <div className=' px-7 py-7' >
 
-{chatMessages.map((message, index) => {
-    // Parsing the date string to obtain the time
-    const messageTime = new Date(message.message_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const messageDate = new Date(message.message_date).toLocaleDateString();
+                        {chatMessages.map((message, index) => {
+                            // Parsing the date string to obtain the time
+                            const messageTime = new Date(message.message_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                            const messageDate = new Date(message.message_date).toLocaleDateString();
 
-    // Check if the current message date is different from the previous message date
-    const showDateSeparator = messageDate !== prevDate;
-    prevDate = messageDate; // Update previous date for next iteration
+                            // Check if the current message date is different from the previous message date
+                            const showDateSeparator = messageDate !== prevDate;
+                            prevDate = messageDate; // Update previous date for next iteration
 
-    return (
-        <div key={index}>
-            {showDateSeparator && (
-                <div className="text-center my-2">
-                    <span className="text-sm text-gray-500">{messageDate}</span>
-                </div>
-            )}
-            <div className={message.sender_guid === user.uid ? 'bg-primary rounded-b-xl rounded-tl-xl ml-auto p-2 mb-4 text-[#ffff] max-w-[40%] relative' : 'max-w-[40%] bg-secondary rounded-b-xl rounded-tr-xl p-2 mb-4 relative'}>
-                <div className="relative">
-                    <div className="absolute top-0 right-0 text-xs text-gray-500">{messageTime}</div>
-                    <div className="relative">
-                        {message.message_text}
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-})}
+                            return (
+                                <div key={index}>
+                                    {showDateSeparator && (
+                                        <div className="text-center my-2">
+                                            <span className="text-sm text-gray-500">{messageDate}</span>
+                                        </div>
+                                    )}
+                                    <div className={message.sender_guid === user.uid ? 'bg-primary rounded-b-xl rounded-tl-xl ml-auto p-2 mb-4 text-[#ffff] max-w-[40%] relative' : 'max-w-[40%] bg-secondary rounded-b-xl rounded-tr-xl p-2 mb-4 relative'}>
+                                        <div className="relative">
+                                            <div className="absolute top-0 right-0 text-xs text-gray-500">{messageTime}</div>
+                                            <div className="relative">
+                                                {message.message_text}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
 
 
                         {/* <div className=' max-w-[40%] bg-secondary rounded-b-xl rounded-tr-xl p-2 mb-4'>
