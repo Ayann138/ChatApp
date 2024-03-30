@@ -134,30 +134,55 @@ function ChatPage() {
     }
     const handelSendMessage = async () => {
         const message_guid = uuidv4();
-        let chat_guid = currentChatUser.chat_guid;
         let sender_guid = user.uid;
         const currentDate = new Date();
         const message_date = currentDate.toISOString();
-        console.log("currentChatUser: ", currentChatUser)
-        socket?.emit('sendMessage', {
-            message_guid, chat_guid, sender_guid, message_text, message_date, receiver_guid: currentChatUser.receiver_guid
-        })
-        try {
-            let response = await fetch("http://localhost:8000/SendMessage", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ message_guid, chat_guid, sender_guid, message_text, message_date }),
+        if(!isGroupChat){
+            let chat_guid = currentChatUser.chat_guid;
+            console.log("currentChatUser: ", currentChatUser)
+            socket?.emit('sendMessage', {
+                message_guid, chat_guid, sender_guid, message_text, message_date, receiver_guid: currentChatUser.receiver_guid
             })
-            let res = await response.text()
-            if (response.status == 200) {
-                console.log(res)
+            try {
+                let response = await fetch("http://localhost:8000/SendMessage", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message_guid, chat_guid, sender_guid, message_text, message_date }),
+                })
+                let res = await response.text()
+                if (response.status == 200) {
+                    console.log(res)
+                }
+                setMessage("")
+            } catch (error) {
+                console.log("Error Sending Message: ", error)
             }
-            setMessage("")
-        } catch (error) {
-            console.log("Error Sending Message: ", error)
+        }else{
+            let group_guid = currentGroup.chats[0]?.groupguid;
+            // console.log("currentChatUser: ", currentChatUser)
+            // socket?.emit('sendMessage', {
+            //     message_guid, chat_guid, sender_guid, message_text, message_date, receiver_guid: currentChatUser.receiver_guid
+            // })
+            try {
+                let response = await fetch("http://localhost:8000/SendGroupMessage", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message_guid, group_guid, sender_guid, message_text, message_date }),
+                })
+                let res = await response.text()
+                if (response.status == 200) {
+                    console.log(res)
+                }
+                setMessage("")
+            } catch (error) {
+                console.log("Error Sending Message: ", error)
+            }
         }
+
     }
     const fetchUserChats = async () => {
         try {
@@ -200,7 +225,6 @@ function ChatPage() {
                         isGroupChat ? (
                             <div className="ml-6 mr-auto">
                                 <h3 className="text-xl">{currentGroup.chats[0]?.groupname}</h3>
-                                {console.log("In cond: " , currentGroup.chats[0]?.groupname)}
                             </div>
                         ) : (
                             <div className="ml-6 mr-auto">
