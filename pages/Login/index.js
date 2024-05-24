@@ -41,11 +41,13 @@ function LoginForm() {
     }
   };
   return (
-    <div className="bg-gray-600 flex items-center justify-center h-screen">
-
+    <div className=" bg-gray-400 flex flex-col items-center justify-center h-screen">
+<div className='font-bold text-4xl pb-4'>
+  We Chat
+</div>
       <div>
         {/* Left Side card */}
-        <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 h-[400px]">
+        <form className=" bg-secondary shadow-md w-[350px] rounded-lg px-8 pt-6 pb-8 mb-4 h-[400px]">
           <div className="mb-4">
             <h1 className="block text-black text-lg font-bold mb-2" htmlFor="username">
               Login To Your Account
