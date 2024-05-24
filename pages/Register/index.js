@@ -12,7 +12,7 @@ function SignupForm() {
   const handleSignUp = async () => {
     const uid = uuidv4();
     const formData = new FormData();
-    formData.append('uid' , uid)
+    formData.append('uid', uid)
     formData.append('email', email);
     formData.append('password', password);
     formData.append('fullName', fullName);
@@ -22,7 +22,7 @@ function SignupForm() {
       const response = await axios.post('http://localhost:8000/RegisterUser', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-         // 'Authorization': token,
+          // 'Authorization': token,
         },
       });
       console.log(response)
@@ -47,75 +47,79 @@ function SignupForm() {
   };
 
   return (
-    <div className="bg-secondary flex items-center justify-center h-screen">
+    <div className="bg-gray-400 flex items-center justify-center h-screen">
       <div>
         {/* Left Side card */}
-        <form className="bg-light shadow-md rounded px-8 pt-6 pb-8 mb-4 w-[400px]">
-          <div className="mb-2">
-            <h1 className="block text-black text-lg font-bold mb-2">Register Yourself</h1>
-            <label className="block text-black text-sm font-bold mb-2" htmlFor="email">
-              Email
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="email"
-              type="text"
-              placeholder="Enter Your Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className="mb-2">
-            <label className="block text-black text-sm font-bold mb-2" htmlFor="password">
-              Password
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-              id="password"
-              type="password"
-              placeholder="******************"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <div className="mb-2">
-            <label className="block text-black text-sm font-bold mb-2" htmlFor="fullName">
-              Full Name
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-              id="fullName"
-              type="text"
-              placeholder="Enter Full Name"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-            />
-          </div>
-          <div className="mb-2">
-            <label className="block text-black text-sm font-bold mb-2" htmlFor="phoneNo">
-              Phone No.
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-              id="phoneNo"
-              type="text"
-              placeholder="Enter Your Phone Number"
-              value={phoneNo}
-              onChange={(e) => setPhone(e.target.value)}
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-black text-sm font-bold mb-2" htmlFor="profilePic">
-              Profile Picture
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-              id="profilePic"
-              name="profilePic"
-              type="file"
-              accept="image/*"
-              onChange={handleProfilePicChange}
-            />
+        <form className=" bg-secondary shadow-md rounded px-8 pt-6 pb-8 mb-4 w-[600px] ">
+          <h1 className="block text-black text-lg font-bold mb-2">Register Yourself</h1>
+          <div className='grid grid-cols-2 p-2'>
+
+
+            <div className="mb-2 p-2">
+              <label className="block text-black text-sm font-bold mb-2" htmlFor="email">
+                Email
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="email"
+                type="text"
+                placeholder="Enter Your Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="mb-2 p-2">
+              <label className="block text-black text-sm font-bold mb-2" htmlFor="password">
+                Password
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                id="password"
+                type="password"
+                placeholder="******************"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <div className="mb-2 p-2">
+              <label className="block text-black text-sm font-bold mb-2" htmlFor="fullName">
+                Full Name
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                id="fullName"
+                type="text"
+                placeholder="Enter Full Name"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+              />
+            </div>
+            <div className="mb-2 p-2">
+              <label className="block text-black text-sm font-bold mb-2" htmlFor="phoneNo">
+                Phone No.
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                id="phoneNo"
+                type="text"
+                placeholder="Enter Your Phone Number"
+                value={phoneNo}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            </div>
+            <div className="mb-4 p-2">
+              <label className="block text-black text-sm font-bold mb-2" htmlFor="profilePic">
+                Profile Picture
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                id="profilePic"
+                name="profilePic"
+                type="file"
+                accept="image/*"
+                onChange={handleProfilePicChange}
+              />
+            </div>
           </div>
           <div className="flex items-center justify-between">
             <button
